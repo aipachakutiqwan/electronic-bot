@@ -1,3 +1,4 @@
+from src.controllers.chat_engine import ChatEngine
 import os
 import openai
 import sys

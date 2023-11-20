@@ -1,0 +1,59 @@
+{
+   "order_001":{
+      "status_order":"Delivered",
+      "status_order_date": "2023-11-20 08:25",
+      "total_amount":699.98,
+      "products":[
+         {
+            "name":"SoundMax Soundbar",
+            "category":"Televisions and Home Theater Systems",
+            "brand":"SoundMax",
+            "model_number":"SM-SB50",
+            "warranty":"1 year",
+            "rating":4.3,
+            "price":199.99
+         },
+         {
+            "name":"GameSphere X",
+            "category":"Gaming Consoles and Accessories",
+            "brand":"GameSphere",
+            "model_number":"GS-X",
+            "warranty":"1 year",
+            "rating":4.9,
+            "price":499.99
+         }
+      ]
+   },
+   "order_002":{
+      "status_order":"Received",
+      "status_order_date": "2023-11-18 08:25",
+      "total_amount":99.99,
+      "products":[
+         {
+            "name":"WaveSound Soundbar",
+            "category":"Audio Equipment",
+            "brand":"WaveSound",
+            "model_number":"WS-SB40",
+            "warranty":"1 year",
+            "rating":4.3,
+            "price":99.99
+         }
+      ]
+   },
+   "order_003":{
+      "status_order":"In transit",
+      "status_order_date": "2023-11-19 08:25",
+      "total_amount":249.99,
+      "products":[
+         {
+            "name":"ZoomMaster Camcorder",
+            "category":"Cameras and Camcorders",
+            "brand":"ZoomMaster",
+            "model_number":"ZM-CM50",
+            "warranty":"1 year",
+            "rating":4.3,
+            "price":249.99
+         }
+      ]
+   }
+}
