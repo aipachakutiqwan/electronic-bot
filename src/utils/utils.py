@@ -33,9 +33,8 @@ def get_completion_from_messages(messages, model="gpt-3.5-turbo", temperature=0,
 def parse_string_to_json(input_string):
     if input_string is None:
         return None
-
     try:
-        input_string = input_string.replace("'", "\"")  # Replace single quotes with double quotes for valid JSON
+        input_string = input_string.replace("'", "\"")
         data = json.loads(input_string)
         return data
     except json.JSONDecodeError:

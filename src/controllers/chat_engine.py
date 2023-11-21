@@ -2,12 +2,13 @@ import time
 from src.utils import utils
 from src.models.products import Products
 from src.models.orders import Orders
+from src.controllers.retrieval_argumented_generation import RetrievalArgumentedGeneration
 
 
 class ChatEngine:
 
     def __init__(self):
-        pass
+        self.rag = RetrievalArgumentedGeneration()
 
     def process_products_intents(self, user_input, all_messages, debug=True):
         delimiter = "```"
@@ -122,12 +123,14 @@ class ChatEngine:
             return final_response, all_messages
         else:
             if debug: print("Step 7: Model disapproved the response.")
-            neg_str = "I'm unable to provide the information you're looking for. \
-            I'll connect you with a human representative for further assistance."
+            neg_str = "I'm unable to provide the information you're looking for. I'll connect you with a human representative for further assistance."
             return neg_str, all_messages
 
+    def process_user_message(self, user_message, context, chat_history, debug=True):
+        #if debug:
+        print(f'context: {context}')
+        print(f'chat_history: {chat_history}')
 
-    def process_user_message(self, user_message, debug=True):
         delimiter = "####"
         system_message = f"""
         You will be provided with customer service queries. \
@@ -148,22 +151,31 @@ class ChatEngine:
         ]
         response = utils.get_completion_from_messages(messages)
         classified_message = utils.parse_string_to_json(response)
-        #if debug: print(f'Sleeping 60 seconds to do not overload model.')
-        #time.sleep(60)
         if classified_message['category'] == 'Products':
-            final_response, all_messages = self.process_products_intents(user_message, [], debug=True)
+            if debug:
+                print(f'Message classified as : {classified_message["category"]}')
+            return self.process_products_intents(user_message, context, debug)
         elif classified_message['category'] == 'Orders':
-            final_response, all_messages = self.process_orders_intents(user_message, [], debug=True)
+            if debug:
+                print(f'Message classified as : {classified_message["category"]}')
+            return self.process_orders_intents(user_message, context, debug)
         elif classified_message['category'] == 'Return Policies':
-            # TODO: RAG
-            final_response, all_messages = self.process_products_intents(user_message, [], debug=True)
+            if debug:
+                print(f'Message classified as : {classified_message["category"]}')
+            # TODO: merge chat_history and context
+            answer, chat_history = self.rag.query(user_message, chat_history, debug)
+            return answer, context
         else:
-            final_response, all_messages = self.process_products_intents(user_message, [], debug=True)
-        return final_response, all_messages
+            if debug:
+                print(f'Message unclassified.')
+            neg_str = f"I'm unable to provide the information you're looking for. I'll connect you with a human representative for further assistance."
+            return neg_str, context
 
 if __name__ == "__main__":
 
-    user_message = "tell me about the smartx pro phone and the fotosnap camera, the dslr one. Also what tell me about your tvs"
+    context = [ {'role':'system', 'content':"You are Service Assistant"} ]
+    chat_history = []
+    #user_message = "tell me about the smartx pro phone and the fotosnap camera, the dslr one. Also what tell me about your tvs"
     CHAT_ENGINE = ChatEngine()
     #user_message = "tell me about audio systems"
     #response,_ = CHAT_ENGINE.process_products_intents(user_message, [], debug=False)
@@ -171,6 +183,23 @@ if __name__ == "__main__":
     #user_message = f"""I want to know about my order"""
     #user_message = f"""which products do you have?"""
     #user_message = f"""do you know anything about the order order_001"""
-    user_message = f"""what is the status of the order_002"""
+    #user_message = f"""what is the status of the order_002"""
+    #user_message = f"""could you let me know about the return policies?"""
+    user_message = f"""hello"""
+    #CHAT_ENGINE.process_user_message(user_message, context, debug=False)
 
-    CHAT_ENGINE.process_user_message(user_message, debug=True)
+    exit_conditions = (":q", "quit", "exit")
+
+    print(f'\nWelcome to Electronic BOT, we are able to answer questions about products, orders and return policies.\n')
+
+    while True:
+        user_message = input("You: ")
+        if len(user_message.rstrip())==0:
+            continue
+        if user_message in exit_conditions:
+            break
+        else:
+            answer, chat_history = CHAT_ENGINE.process_user_message(user_message, context, chat_history, debug=True)
+            print(f"Electronic Bot: {answer}")
+            print(f'\n')
+
