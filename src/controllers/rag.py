@@ -14,11 +14,11 @@ _ = load_dotenv(find_dotenv())
 
 openai.api_key  = os.environ['OPENAI_API_KEY']
 
-class RetrievalArgumentedGeneration:
+class Rag:
 
     def __init__(self):
         self.llm_name = "gpt-3.5-turbo"
-        self.file = "src/rag/docs/returns_policies/return_policies.pdf"
+        self.file = "src/data/rag/docs/returns_policies/return_policies.pdf"
         self.chain_type = "stuff"
         self.k = 4
         self.qa = self.load_db(self.file, self.chain_type, self.k)
@@ -56,7 +56,7 @@ class RetrievalArgumentedGeneration:
 
 if __name__ == "__main__":
 
-    RAG = RetrievalArgumentedGeneration()
+    RAG = Rag()
     query = "What is Electronic bot return policies period"
     query = "how could I contact to Electronic bot for return policies"
     query = "What happen with defective items after 30 Days"

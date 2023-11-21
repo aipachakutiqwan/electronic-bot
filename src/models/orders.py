@@ -5,8 +5,7 @@ from src.utils import utils
 class Orders:
 
     def __init__(self):
-        self.json_file = os.getenv('ORDERS_FILE_PATH', '/Users/c325018/Documents/interviews/electronic-bot/src/data/orders.json')
-        self.json_file = os.getenv('ORDERS_FILE_PATH', '/Users/c325018/Documents/interviews/electronic-bot/src/data/orders.json')
+        self.json_file = os.getenv('ORDERS_FILE_PATH')
 
     def read_file(self):
         json_file = utils.read_json_file(self.json_file)
