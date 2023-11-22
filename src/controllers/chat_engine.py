@@ -48,8 +48,7 @@ class ChatEngine:
             return final_response, all_messages
         else:
             if debug: print("Model disapproved the response.")
-            neg_str = "I'm unable to provide the information you're looking for. \
-            I'll connect you with a human representative for further assistance."
+            neg_str = "I'm unable to provide the information you're looking for. I'll connect you with a human representative for further assistance."
             return neg_str, all_messages
 
 
@@ -72,13 +71,13 @@ class ChatEngine:
             print(f'find_category_and_product_only: {find_category_and_product_only}')
         parsed_category_and_product_list = utils.parse_string_to_json(find_category_and_product_only)
         if debug:
-            print(f'Extracted list of products.: {parsed_category_and_product_list}')
+            print(f'Extracted list of products: {parsed_category_and_product_list}')
 
         # List all the products from the parsed list parsed_category_and_product_list.
         # This information will be used to response to the user question
         product_information = Products().generate_output_string(parsed_category_and_product_list)
         if debug:
-            print("Looked up product information: {product_information}")
+            print(f"Looked up product information: {product_information}")
 
         # Answer the user question about products
         system_message = f"""
@@ -94,7 +93,7 @@ class ChatEngine:
 
         final_response = utils.get_completion_from_messages(all_messages + messages)
         if debug:
-            print("Generated response to user question: {final_response}")
+            print(f"Generated response to user question: {final_response}")
         all_messages = all_messages + messages[1:]
 
         return self.validate_response(user_input,
@@ -126,7 +125,7 @@ class ChatEngine:
         ]
         final_response = utils.get_completion_from_messages(all_messages + messages)
         if debug:
-            print("Generated response to user question: {final_response}")
+            print(f"Generated response to user question: {final_response}")
         all_messages = all_messages + messages[1:]
         return self.validate_response(user_input, final_response,
                                       system_message, all_messages, debug)

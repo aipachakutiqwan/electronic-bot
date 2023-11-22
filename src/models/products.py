@@ -51,16 +51,19 @@ class Products:
                         if product:
                             output_string += json.dumps(product, indent=4) + "\n"
                         else:
-                            print(f"Error: Product '{product_name}' not found")
+                            pass
+                            #print(f"Error: Product '{product_name}' not found")
                 elif "category" in data:
                     category_name = data["category"]
                     category_products = self.get_products_by_category(category_name)
                     for product in category_products:
                         output_string += json.dumps(product, indent=4) + "\n"
                 else:
-                    print("Error: Invalid object format")
+                    pass
+                    #print("Error: Invalid object format")
             except Exception as e:
-                print(f"Error: {e}")
+                pass
+                #print(f"Error: {e}")
 
         return output_string
 
