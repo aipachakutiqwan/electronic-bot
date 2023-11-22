@@ -1,3 +1,7 @@
+"""
+RAG class uses conversational retriever from LangChain to query information from PDF document.
+"""
+
 import os
 import openai
 from langchain.embeddings.openai import OpenAIEmbeddings
@@ -17,26 +21,35 @@ openai.api_key  = os.environ['OPENAI_API_KEY']
 class Rag:
 
     def __init__(self):
-        self.llm_name = "gpt-3.5-turbo"
-        self.file = "src/data/rag/docs/returns_policies/return_policies.pdf"
-        self.chain_type = "stuff"
-        self.k = 4
+        self.llm_name = os.environ['LLM_NAME']
+        self.file = os.environ['RAG_DOCUMENT']
+        self.chain_type = os.environ['CHAIN_TYPE']
+        self.k = int(os.environ['K_RAG'])
         self.qa = self.load_db(self.file, self.chain_type, self.k)
 
     def load_db(self, file, chain_type, k):
-        # load documents
+        """
+        Read the PDF document, split it, storage as vectorstores and
+        return a conversational retriever used to query into the document information.
+        Args:
+            :param file: PDF file path with return policies information.
+            :param chain_type: chain type
+            :param k:
+        Returns:
+            :returns qa: ConversationalRetrievalChain
+        """
+        # load PDF documents
         loader = PyPDFLoader(file)
         documents = loader.load()
-        # split documents
+        # split documents in chunks
         text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=150)
         docs = text_splitter.split_documents(documents)
-        # define embedding
+        # define embedding for the document
         embeddings = OpenAIEmbeddings()
-        # create vector database from data
+        # create vector database from document data
         db = DocArrayInMemorySearch.from_documents(docs, embeddings)
-        # define retriever
         retriever = db.as_retriever(search_type="similarity", search_kwargs={"k": k})
-        # create a chatbot chain.
+        # create a chatbot chain which will be used to extract information
         qa = ConversationalRetrievalChain.from_llm(
             llm=ChatOpenAI(model_name=self.llm_name, temperature=0),
             chain_type=chain_type,
@@ -46,16 +59,24 @@ class Rag:
         )
         return qa
 
-    def query(self, query, chat_history, debug=True):
-        response = self.qa({"question": query, "chat_history": chat_history})
+    def query(self, query, rag_retrieval_history, debug=True):
+        """
+        Query information into the conversational retriever.
+        Args:
+            :param query: user query.
+            :param rag_retrieval_history: retrieval queries history
+        Returns:
+            :returns answer: string answer obtained with the conversational retriever
+            :returns rag_retrieval_history: retrieval queries history
+        """
+        response = self.qa({"question": query, "chat_history": rag_retrieval_history})
         if debug:
             print(f'answer RAG: {response["answer"]}')
-        chat_history.extend([(query, response["answer"])])
-        return response['answer'], chat_history
+        rag_retrieval_history.extend([(query, response["answer"])])
+        return response['answer'], rag_retrieval_history
 
 
 if __name__ == "__main__":
-
     RAG = Rag()
     query = "What is Electronic bot return policies period"
     query = "how could I contact to Electronic bot for return policies"

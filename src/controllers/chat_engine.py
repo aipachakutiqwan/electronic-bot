@@ -1,3 +1,6 @@
+"""
+Chat engine class manage the bot conversation about products, orders and return policies.
+"""
 import time
 from src.utils import utils
 from src.models.products import Products
@@ -11,9 +14,20 @@ class ChatEngine:
         self.rag = Rag()
         self.delimiter = "```"
 
-    def validate_response(self, user_input, final_response, system_message, user_message, all_messages, debug=True):
+    def validate_response(self, user_input, final_response, system_message, all_messages, debug=True):
+        """
+        Validate the response of the bot, if the bot it is not responding the user question,
+        a human forwarding message will be provided.
+        Args:
+            :param user_input: original user input message
+            :param final_response: response bot
+            :param system_message: system content message
+            :param all_messages: history messages
+        Returns:
+            :returns final_response, all_messages: string text response and all history messages
+        """
 
-        # Step 4: Ask the model if the response answers the initial user query well
+        #Ask the model if the response answers the user query well
         user_message = f"""
         Customer message: {self.delimiter}{user_input}{self.delimiter}
         Agent response: {self.delimiter}{final_response}{self.delimiter}
@@ -27,44 +41,49 @@ class ChatEngine:
         evaluation_response = utils.get_completion_from_messages(messages)
         if debug:
             print(f'Evaluation to the user response: {evaluation_response}')
-            print("Step 6: Model evaluated the response.")
 
-
-        # Step 5: If yes, use this answer; if not, say that you will connect the user to a human
+        # If yes, use this answer; if not, say that you will connect the user to a human
         if "Y" in evaluation_response:
-            if debug: print("Step 7: Model approved the response.")
+            if debug: print("Model approved the response.")
             return final_response, all_messages
         else:
-            if debug: print("Step 7: Model disapproved the response.")
+            if debug: print("Model disapproved the response.")
             neg_str = "I'm unable to provide the information you're looking for. \
             I'll connect you with a human representative for further assistance."
             return neg_str, all_messages
 
 
     def process_products_intents(self, user_input, all_messages, debug=True):
+        """
+        Process the user questions classified as products,
+        lookup the products data for answer the questions.
+        Args:
+            :param user_input: original user input message about products
+            :param all_messages: history messages
+        Returns:
+            :returns final_response, all_messages: string text response and all history messages
+        """
 
-        # Step 1: Find the categories and products from the input message.
-        #         Parse to json the categories and products found.
+        # Find the categories and products from the input message.
+        # Parse to json the categories and products found.
         find_category_and_product_only = Products().find_category_and_product_only(user_input,
         Products().get_products_and_category())
         if debug:
             print(f'find_category_and_product_only: {find_category_and_product_only}')
         parsed_category_and_product_list = utils.parse_string_to_json(find_category_and_product_only)
         if debug:
-            print(f'parsed_category_and_product_list: {parsed_category_and_product_list}')
-            print("Step 2: Extracted list of products.")
+            print(f'Extracted list of products.: {parsed_category_and_product_list}')
 
-        # Step 2: List all the products from the parsed list parsed_category_and_product_list.
-        #         This information will be used to response to the user question
+        # List all the products from the parsed list parsed_category_and_product_list.
+        # This information will be used to response to the user question
         product_information = Products().generate_output_string(parsed_category_and_product_list)
         if debug:
-            #print(f'product_information: {product_information}')
-            print("Step 3: Looked up product information.")
+            print("Looked up product information: {product_information}")
 
-        # Step 3: Answer the user question
+        # Answer the user question about products
         system_message = f"""
         You are a customer service assistant for a electronic store. \
-        Respond in a friendly and helpful tone, with concise answers. \
+        Respond in a friendly and helpful tone about products, with concise answers. \
         Make sure to ask the user relevant follow-up questions.
         """
         messages = [
@@ -75,21 +94,29 @@ class ChatEngine:
 
         final_response = utils.get_completion_from_messages(all_messages + messages)
         if debug:
-            print(f'final_response to the user: {final_response}')
-            print("Step 4: Generated response to user question.")
+            print("Generated response to user question: {final_response}")
         all_messages = all_messages + messages[1:]
 
-        return self.validate_response(user_input, final_response, system_message, user_message, all_messages, debug)
+        return self.validate_response(user_input,
+                                      final_response, system_message, all_messages, debug)
 
 
 
     def process_orders_intents(self, user_input, all_messages, debug=True):
-
-        # Step 1: Answer the user question about orders
+        """
+        Process the user questions classified as orders,
+        use the orders data to answer the questions.
+        Args:
+            :param user_input: original user input message about orders
+            :param all_messages: history messages
+        Returns:
+            :returns final_response, all_messages: string text response and all history messages
+        """
+        # Answer the user question about orders
         list_orders = Orders().get_orders()
         system_message = f"""
         You are a customer service assistant for a electronic store. \
-        Respond in a friendly and helpful tone, with concise answers. \
+        Respond in a friendly and helpful tone about orders, with concise answers. \
         Make sure to ask the user relevant follow-up questions.
         """
         messages = [
@@ -97,20 +124,31 @@ class ChatEngine:
             {'role': 'user', 'content': f"{self.delimiter}{user_input}{self.delimiter}"},
             {'role': 'assistant', 'content': f"Relevant orders information:\n{list_orders}"}
         ]
-
         final_response = utils.get_completion_from_messages(all_messages + messages)
         if debug:
-            print(f'final_response to the user: {final_response}')
-            print("Step 4: Generated response to user question.")
+            print("Generated response to user question: {final_response}")
         all_messages = all_messages + messages[1:]
+        return self.validate_response(user_input, final_response,
+                                      system_message, all_messages, debug)
 
-        return self.validate_response(user_input, final_response, system_message, user_message, all_messages, debug)
 
-
-    def process_user_message(self, user_message, context, chat_history, debug=True):
+    def process_user_message(self, user_message, context, rag_retrieval_history, debug=True):
+        """
+        Classify the users questions as products, orders, return policies or general questions.
+        For products and orders use the application databases (json files) and for return policies
+        use the Retrieval Argument Generation Method which retrieve the information from the return policies document.
+        Args:
+            :param user_message: user question
+            :param context: initial context role for the bot which will be used to store all history messages
+            :param rag_retrieval_history: RAG messages history interaction
+        Returns:
+            :returns response: string response to the user question
+            :returns context: all interaction messages produced
+            :returns rag_retrieval_history: all interaction messages using RAG approach
+        """
         if debug:
             print(f'context: {context}')
-            print(f'chat_history: {chat_history}')
+            print(f'rag_retrieval_history: {rag_retrieval_history}')
 
         delimiter = "####"
         system_message = f"""
@@ -120,7 +158,6 @@ class ChatEngine:
         Classify each query into a category. \
         Provide your output in json format with the \
         keys: category.
-
         categories: Products, Orders, \
         Return Policies.
         """
@@ -135,40 +172,42 @@ class ChatEngine:
         if classified_message['category'] == 'Products':
             if debug:
                 print(f'Message classified as : {classified_message["category"]}')
-            return self.process_products_intents(user_message, context, debug)
+            answer, context = self.process_products_intents(user_message, context, debug)
+            return (answer, context, rag_retrieval_history)
         elif classified_message['category'] == 'Orders':
             if debug:
                 print(f'Message classified as : {classified_message["category"]}')
-            return self.process_orders_intents(user_message, context, debug)
+            answer, context = self.process_orders_intents(user_message, context, debug)
+            return (answer, context, rag_retrieval_history)
         elif classified_message['category'] == 'Return Policies':
             if debug:
                 print(f'Message classified as : {classified_message["category"]}')
-            # TODO: merge chat_history and context
-            answer, chat_history = self.rag.query(user_message, chat_history, debug)
-            return answer, context
+            answer, rag_retrieval_history = self.rag.query(user_message, rag_retrieval_history, debug)
+            return (answer, context, rag_retrieval_history)
         else:
+            # If the user message is not below the categories,
+            # the bot will try to give an answer using the general knowledge
             if debug:
-                print(f'Message unclassified.')
+                print(f'Message unclassified. Bot will try to answer a general question')
             messages = [{"role": "user", "content": user_message}]
             response = utils.get_completion_from_messages(messages)
-            #neg_str = f"I'm unable to provide the information you're looking for. I'll connect you with a human representative for further assistance."
-            return response, context
+            return (response, context, rag_retrieval_history)
 
 if __name__ == "__main__":
 
     context = [ {'role':'system', 'content':"You are Service Assistant"} ]
-    chat_history = []
+    rag_retrieval_history = []
     #user_message = "tell me about the smartx pro phone and the fotosnap camera, the dslr one. Also what tell me about your tvs"
     CHAT_ENGINE = ChatEngine()
     #user_message = "tell me about audio systems"
     #response,_ = CHAT_ENGINE.process_products_intents(user_message, [], debug=False)
     #print(response)
     #user_message = f"""I want to know about my order"""
-    #user_message = f"""which products do you have?"""
+    user_message = f"""which products do you have?"""
     #user_message = f"""do you know anything about the order order_001"""
     #user_message = f"""what is the status of the order_002"""
     #user_message = f"""could you let me know about the return policies?"""
-    user_message = f"""hello"""
+    #user_message = f"""hello"""
     #CHAT_ENGINE.process_user_message(user_message, context, debug=False)
 
     exit_conditions = (":q", "quit", "exit")
@@ -182,7 +221,9 @@ if __name__ == "__main__":
         if user_message in exit_conditions:
             break
         else:
-            answer, context = CHAT_ENGINE.process_user_message(user_message, context, chat_history, debug=True)
+            answer, context, rag_retrieval_history = \
+            CHAT_ENGINE.process_user_message(user_message, context,
+                                             rag_retrieval_history, debug=False)
             print(f"Electronic Bot: {answer}")
             print(f'\n')
 

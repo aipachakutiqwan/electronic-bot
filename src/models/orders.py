@@ -1,7 +1,6 @@
 import os
 from src.utils import utils
 
-
 class Orders:
 
     def __init__(self):
