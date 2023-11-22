@@ -8,9 +8,17 @@ Electronic Bot manage questions about four topics:
 
 The bot uses the data in json format located in ```./data ``` to answer questions about orders and products.
 
-For return policies, the bot uses  a Retrieval Argumented Generation (RAG) approach to query information from the documents located in  ```./src/data/rag/docs/returns_policies/return_policies.pdf. ```
+For return policies, the bot uses  a Retrieval Argumented Generation (RAG) approach to query information from the document located in  ```./src/data/rag/docs/returns_policies/return_policies.pdf. ```
 
-## How run the bot application?:
+## Architecture
+
+The following diagram describe the application architecture with its different components and how is managed the conversational flow.
+
+![Architecture](./docs/architecture.png?  "Title")
+
+
+
+## How run the bot application?
 
 Follow the next steps to interact with the bot by command line.
 
@@ -26,6 +34,9 @@ python3 src/controllers/chat_engine.py
 
 ## Conversation examples:
 
-Questions about products:
+- Questions about products
+```
+
+```
 
 

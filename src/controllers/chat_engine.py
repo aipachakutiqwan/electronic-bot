@@ -195,23 +195,19 @@ class ChatEngine:
 
 if __name__ == "__main__":
 
+    CHAT_ENGINE = ChatEngine()
     context = [ {'role':'system', 'content':"You are Service Assistant"} ]
     rag_retrieval_history = []
     #user_message = "tell me about the smartx pro phone and the fotosnap camera, the dslr one. Also what tell me about your tvs"
-    CHAT_ENGINE = ChatEngine()
     #user_message = "tell me about audio systems"
-    #response,_ = CHAT_ENGINE.process_products_intents(user_message, [], debug=False)
-    #print(response)
     #user_message = f"""I want to know about my order"""
-    user_message = f"""which products do you have?"""
+    #user_message = f"""which products do you have?"""
     #user_message = f"""do you know anything about the order order_001"""
     #user_message = f"""what is the status of the order_002"""
     #user_message = f"""could you let me know about the return policies?"""
     #user_message = f"""hello"""
-    #CHAT_ENGINE.process_user_message(user_message, context, debug=False)
 
     exit_conditions = (":q", "quit", "exit")
-
     print(f'\nWelcome to Electronic BOT, we are able to answer questions about products, orders and return policies.\n')
 
     while True:
