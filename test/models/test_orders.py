@@ -14,4 +14,6 @@ class TestOrders(unittest.TestCase):
         json_file = self.orders.read_file()
         self.assertIsInstance(json_file, dict)
 
-
+    def test_get_orders(self):
+        json_orders = self.orders.get_orders()
+        self.assertIsInstance(json_orders, dict)
