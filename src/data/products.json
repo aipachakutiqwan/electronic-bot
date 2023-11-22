@@ -1,0 +1,194 @@
+{
+  "TechPro Desktop": {
+    "name": "TechPro Desktop",
+    "category": "Computers and Laptops",
+    "brand": "TechPro",
+    "model_number": "TP-DT500",
+    "warranty": "1 year",
+    "rating": 4.4,
+    "features": [
+      "Intel Core i7 processor",
+      "16GB RAM",
+      "1TB HDD",
+      "NVIDIA GeForce GTX 1660"
+    ],
+    "description": "A powerful desktop computer for work and play.",
+    "price": 999.99
+  },
+  "BlueWave Chromebook": {
+    "name": "BlueWave Chromebook",
+    "category": "Computers and Laptops",
+    "brand": "BlueWave",
+    "model_number": "BW-CB100",
+    "warranty": "1 year",
+    "rating": 4.1,
+    "features": [
+      "11.6-inch display",
+      "4GB RAM",
+      "32GB eMMC",
+      "Chrome OS"
+    ],
+    "description": "A compact and affordable Chromebook for everyday tasks.",
+    "price": 249.99
+  },
+  "MobiTech Wireless Charger": {
+    "name": "MobiTech Wireless Charger",
+    "category": "Smartphones and Accessories",
+    "brand": "MobiTech",
+    "model_number": "MT-WC10",
+    "warranty": "1 year",
+    "rating": 4.5,
+    "features": [
+      "10W fast charging",
+      "Qi-compatible",
+      "LED indicator",
+      "Compact design"
+    ],
+    "description": "A convenient wireless charger for a clutter-free workspace.",
+    "price": 29.99
+  },
+  "SmartX EarBuds": {
+    "name": "SmartX EarBuds",
+    "category": "Smartphones and Accessories",
+    "brand": "SmartX",
+    "model_number": "SX-EB20",
+    "warranty": "1 year",
+    "rating": 4.4,
+    "features": [
+      "True wireless",
+      "Bluetooth 5.0",
+      "Touch controls",
+      "24-hour battery life"
+    ],
+    "description": "Experience true wireless freedom with these comfortable earbuds.",
+    "price": 99.99
+  },
+  "SoundMax Soundbar": {
+    "name": "SoundMax Soundbar",
+    "category": "Televisions and Home Theater Systems",
+    "brand": "SoundMax",
+    "model_number": "SM-SB50",
+    "warranty": "1 year",
+    "rating": 4.3,
+    "features": [
+      "2.1 channel",
+      "300W output",
+      "Wireless subwoofer",
+      "Bluetooth"
+    ],
+    "description": "Upgrade your TV's audio with this sleek and powerful soundbar.",
+    "price": 199.99
+  },
+  "CineView OLED TV": {
+    "name": "CineView OLED TV",
+    "category": "Televisions and Home Theater Systems",
+    "brand": "CineView",
+    "model_number": "CV-OLED55",
+    "warranty": "2 years",
+    "rating": 4.7,
+    "features": [
+      "55-inch display",
+      "4K resolution",
+      "HDR",
+      "Smart TV"
+    ],
+    "description": "Experience true blacks and vibrant colors with this OLED TV.",
+    "price": 1499.99
+  },
+  "GameSphere X": {
+    "name": "GameSphere X",
+    "category": "Gaming Consoles and Accessories",
+    "brand": "GameSphere",
+    "model_number": "GS-X",
+    "warranty": "1 year",
+    "rating": 4.9,
+    "features": [
+      "4K gaming",
+      "1TB storage",
+      "Backward compatibility",
+      "Online multiplayer"
+    ],
+    "description": "A next-generation gaming console for the ultimate gaming experience.",
+    "price": 499.99
+  },
+  "ProGamer Controller": {
+    "name": "ProGamer Controller",
+    "category": "Gaming Consoles and Accessories",
+    "brand": "ProGamer",
+    "model_number": "PG-C100",
+    "warranty": "1 year",
+    "rating": 4.2,
+    "features": [
+      "Ergonomic design",
+      "Customizable buttons",
+      "Wireless",
+      "Rechargeable battery"
+    ],
+    "description": "A high-quality gaming controller for precision and comfort.",
+    "price": 59.99
+  },
+  "WaveSound Soundbar": {
+    "name": "WaveSound Soundbar",
+    "category": "Audio Equipment",
+    "brand": "WaveSound",
+    "model_number": "WS-SB40",
+    "warranty": "1 year",
+    "rating": 4.3,
+    "features": [
+      "2.0 channel",
+      "80W output",
+      "Bluetooth",
+      "Wall-mountable"
+    ],
+    "description": "Upgrade your TV's audio with this slim and powerful soundbar.",
+    "price": 99.99
+  },
+  "AudioPhonic Turntable": {
+    "name": "AudioPhonic Turntable",
+    "category": "Audio Equipment",
+    "brand": "AudioPhonic",
+    "model_number": "AP-TT10",
+    "warranty": "1 year",
+    "rating": 4.2,
+    "features": [
+      "3-speed",
+      "Built-in speakers",
+      "Bluetooth",
+      "USB recording"
+    ],
+    "description": "Rediscover your vinyl collection with this modern turntable.",
+    "price": 149.99
+  },
+  "ZoomMaster Camcorder": {
+    "name": "ZoomMaster Camcorder",
+    "category": "Cameras and Camcorders",
+    "brand": "ZoomMaster",
+    "model_number": "ZM-CM50",
+    "warranty": "1 year",
+    "rating": 4.3,
+    "features": [
+      "1080p video",
+      "30x optical zoom",
+      "3-inch LCD",
+      "Image stabilization"
+    ],
+    "description": "Capture life's moments with this easy-to-use camcorder.",
+    "price": 249.99
+  },
+  "FotoSnap Instant Camera": {
+    "name": "FotoSnap Instant Camera",
+    "category": "Cameras and Camcorders",
+    "brand": "FotoSnap",
+    "model_number": "FS-IC10",
+    "warranty": "1 year",
+    "rating": 4.1,
+    "features": [
+      "Instant prints",
+      "Built-in flash",
+      "Selfie mirror",
+      "Battery-powered"
+    ],
+    "description": "Create instant memories with this fun and portable instant camera.",
+    "price": 69.99
+  }
+}
